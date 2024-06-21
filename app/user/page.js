@@ -4,6 +4,7 @@ import Spinner from "../components/Spinner";
 import { Table } from "antd";
 import Heading from "../components/Heading";
 import { getColumns, getDataSource } from "../_utils/tableSourse";
+import FilterDropdown from "../components/FilterDropdown";
 
 export default async function UserPage() {
   let users = [];
@@ -30,7 +31,7 @@ export default async function UserPage() {
 
   return (
     <div>
-      <Heading category="Users" filter="filter" />
+      <Heading category="Users" />
       {error ? (
         <p>Error fetching users: {error}</p>
       ) : users.length > 0 ? (

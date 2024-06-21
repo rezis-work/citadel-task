@@ -32,7 +32,7 @@ export function getColumns({ first, second, third, fourth, fifth }) {
 
 export function getDataSource(
   items,
-  { first, second, third, fourth, fifth },
+  { first, second, third, fourth },
   action,
   type
 ) {
@@ -51,7 +51,9 @@ export function getDataSource(
     if (type === "tasks") {
       return {
         key: item.id,
-        fullname: `${item._assigned_member?.firstname} ${item._assigned_member?.lastname}`,
+        fullname: `${item._assigned_member?.firstname || ""} ${
+          item._assigned_member?.lastname || ""
+        }`,
         title: item.title,
         description: item.description,
         status: item.status,
