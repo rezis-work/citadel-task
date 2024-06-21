@@ -1,25 +1,65 @@
 "use client";
 
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { getUsers } from "../_lib/user-service";
 
-export default function FilterDropdown() {
+export default function FilterDropDownUser() {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("გიორგი");
+  const [all, setAll] = useState(false);
   const [name, setName] = useState(false);
   const [isFemale, setIsFemale] = useState(false);
   const [isMale, setIsMale] = useState(false);
 
-  console.log(name, isFemale, isMale);
+  const router = useRouter();
 
   const handleSelectAll = () => {
     setName((name) => !name);
     setIsFemale((female) => !female);
     setIsMale((male) => !male);
+    setAll((all) => !all);
   };
 
   const handleOpen = () => {
     setIsOpen((open) => !open);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      let queryParams = {};
+      if (name) queryParams.name = search;
+      if (isMale) queryParams.gender = "male";
+      if (isFemale) queryParams.gender = "female";
+
+      // Convert queryParams to string values
+      const formattedQueryParams = {};
+      Object.keys(queryParams).forEach((key) => {
+        formattedQueryParams[key] = queryParams[key].toString();
+      });
+
+      const data = await getUsers(
+        formattedQueryParams.name,
+        formattedQueryParams.gender
+      );
+
+      router.push(
+        `/user/${formattedQueryParams.name || formattedQueryParams.gender}`
+      );
+    } catch (error) {
+      console.error("Error fetching filtered users:", error);
+    }
+  };
+
+  const handleClear = () => {
+    setSearch("");
+    setAll(false);
+    setName(false);
+    setIsFemale(false);
+    setIsMale(false);
+
+    router.push("/user");
   };
   return (
     <div className=" flex gap-3 items-center px-4 py-2 border rounded-md hover:bg-gray-500 relative w-[100px]">
@@ -41,6 +81,7 @@ export default function FilterDropdown() {
               name="all"
               id="all"
               onChange={handleSelectAll}
+              checked={all}
             />
             <span className=" text-gray-700 text-xs">Select All</span>
           </div>
@@ -52,7 +93,9 @@ export default function FilterDropdown() {
               onChange={(e) => setName(e.currentTarget.checked)}
               checked={name}
             />
-            <span className=" text-gray-700 text-xs">{search}</span>
+            <span className=" text-gray-700 text-xs">
+              {search || "firstname"}
+            </span>
           </div>
           <div className=" flex items-center gap-3 mt-2 pl-5">
             <input
@@ -75,10 +118,16 @@ export default function FilterDropdown() {
             <span className=" text-gray-700 text-xs">female</span>
           </div>
           <div className=" flex gap-3">
-            <button className=" bg-white text-gray-600 px-4 py-0 rounded-md mt-2 hover:bg-gray-500 hover:text-white">
+            <button
+              onClick={handleClear}
+              className=" bg-white text-gray-600 px-4 py-0 rounded-md mt-2 hover:bg-gray-500 hover:text-white"
+            >
               Clear
             </button>
-            <button className=" bg-white text-gray-600 px-4 py-0 rounded-md mt-2 hover:bg-gray-500 hover:text-white">
+            <button
+              onClick={handleSubmit}
+              className=" bg-white text-gray-600 px-4 py-0 rounded-md mt-2 hover:bg-gray-500 hover:text-white"
+            >
               Submit
             </button>
           </div>
