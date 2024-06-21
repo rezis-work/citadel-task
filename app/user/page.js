@@ -1,5 +1,9 @@
 import React from "react";
 import { getUsers } from "../_lib/user-service";
+import Spinner from "../components/Spinner";
+import { Table } from "antd";
+import Heading from "../components/Heading";
+import { getColumns, getDataSource } from "../_utils/tableSourse";
 
 export default async function UserPage() {
   let users = [];
@@ -11,26 +15,30 @@ export default async function UserPage() {
     error = err.message;
   }
 
+  if (!users) return <Spinner />;
+
+  const columnNames = {
+    first: "Firstname",
+    second: "Lastname",
+    third: "Gender",
+    fourth: "Birthday",
+    fifth: "Action",
+  };
+
+  const columns = getColumns(columnNames);
+  const dataSource = getDataSource(users, columnNames, "action", "users");
+
   return (
     <div>
-      <div className=" flex justify-between items-center px-20">
-        <h2>Users</h2>
-        <p>Filters</p>
-      </div>
+      <Heading category="Users" filter="filter" />
       {error ? (
         <p>Error fetching users: {error}</p>
+      ) : users.length > 0 ? (
+        <div className=" w-[1200px] mx-auto">
+          <Table dataSource={dataSource} columns={columns} />
+        </div>
       ) : (
-        <ul>
-          {users.length > 0 ? (
-            users.map((user) => (
-              <li key={user.id}>
-                {user.firstname} {user.lastname} - {user.gender}
-              </li>
-            ))
-          ) : (
-            <p>No User Found</p>
-          )}
-        </ul>
+        <p>Users not found</p>
       )}
     </div>
   );

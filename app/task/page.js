@@ -1,5 +1,9 @@
 import React from "react";
 import { getTasks } from "../_lib/task-service";
+import Spinner from "../components/Spinner";
+import { getColumns, getDataSource } from "../_utils/tableSourse";
+import { Table } from "antd";
+import Heading from "../components/Heading";
 
 export default async function TaskPage() {
   let tasks = [];
@@ -10,26 +14,31 @@ export default async function TaskPage() {
   } catch (err) {
     error = err.message;
   }
+
+  if (!tasks) return <Spinner />;
+
+  const columnNames = {
+    first: "Fullname",
+    second: "Title",
+    third: "Description",
+    fourth: "Status",
+    fifth: "Action",
+  };
+
+  const columns = getColumns(columnNames);
+  const dataSource = getDataSource(tasks, columnNames, "action", "tasks");
+
   return (
     <div>
-      <div className=" flex justify-between items-center px-20">
-        <h2>Users</h2>
-        <p>Filters</p>
-      </div>
+      <Heading category="Tasks" filter="filter" />
       {error ? (
         <p>Error fetching users: {error}</p>
+      ) : tasks.length > 0 ? (
+        <div className=" w-[1200px] mx-auto">
+          <Table dataSource={dataSource} columns={columns} />
+        </div>
       ) : (
-        <ul>
-          {tasks.length > 0 ? (
-            tasks.map((task) => (
-              <li key={task.id}>
-                {task.title} {task.description} - {task.status}
-              </li>
-            ))
-          ) : (
-            <p>No User Found</p>
-          )}
-        </ul>
+        <p>Users not found</p>
       )}
     </div>
   );
