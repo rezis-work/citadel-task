@@ -1,10 +1,10 @@
-import Header from "./components/Header";
+import Main from "./components/Main";
 
 export default function Home() {
   return (
     <div>
       <main>
-        <h1>welcome to our web</h1>
+        <Main />
       </main>
     </div>
   );
