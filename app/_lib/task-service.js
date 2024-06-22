@@ -13,3 +13,22 @@ export const getTasks = async () => {
     return [];
   }
 };
+
+export const deleteTask = async (taskId) => {
+  try {
+    const deleteURL = `https://x8ki-letl-twmt.n7.xano.io/api:tSDGfQun/tasks/${taskId}`;
+    const deleteResponse = await fetch(deleteURL, {
+      method: "DELETE",
+    });
+
+    if (!deleteResponse.ok) {
+      throw new Error(`Failed to delete task: ${deleteResponse.statusText}`);
+    }
+
+    // Assuming successful deletion, you may want to handle response
+    return deleteResponse.json(); // Optionally return data from delete response
+  } catch (error) {
+    console.error("Error deleting task:", error);
+    throw error;
+  }
+};

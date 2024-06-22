@@ -1,22 +1,40 @@
-import React from "react";
-import { getUsers } from "../_lib/user-service";
+"use client";
+import React, { useState, useEffect } from "react";
+import { getUsers, deleteUser } from "../_lib/user-service";
 import Spinner from "../components/Spinner";
-import { Table } from "antd";
+import { Table, Button, Popconfirm, message } from "antd";
 import Heading from "../components/Heading";
 
-export default async function UserPage() {
-  let users = [];
-  let error = null;
+export default function UserPage() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  try {
-    users = await getUsers();
-  } catch (error) {
-    error = err.message;
-  }
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const userData = await getUsers();
+        setUsers(userData);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
 
-  if (!users) return <Spinner />;
+    fetchUsers();
+  }, []);
 
-  console.log(users);
+  const handleDelete = async (userId) => {
+    try {
+      await deleteUser(userId);
+      // Remove the deleted user from the local state
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+      message.success("User deleted successfully!");
+    } catch (error) {
+      message.error(`Failed to delete user: ${error.message}`);
+    }
+  };
 
   const columns = [
     {
@@ -41,8 +59,19 @@ export default async function UserPage() {
     },
     {
       title: "Action",
-      dataIndex: "action",
       key: "action",
+      render: (text, record) => (
+        <Popconfirm
+          title="Are you sure to delete this user?"
+          onConfirm={() => handleDelete(record.key)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button type="link" danger>
+            Delete
+          </Button>
+        </Popconfirm>
+      ),
     },
   ];
 
@@ -52,16 +81,17 @@ export default async function UserPage() {
     lastname: user.lastname,
     gender: user.gender,
     birthday: user.birthday,
-    action: "Action", // Placeholder for action column
   }));
 
   return (
     <div>
       <Heading category="Users" />
-      {error ? (
-        <p>Error fetching users: {}</p>
+      {loading ? (
+        <Spinner />
+      ) : error ? (
+        <p>Error fetching users: {error}</p>
       ) : users.length > 0 ? (
-        <div className=" w-[1200px] mx-auto">
+        <div className="w-[1200px] mx-auto">
           <Table dataSource={dataSource} columns={columns} />
         </div>
       ) : (

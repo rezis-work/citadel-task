@@ -12,7 +12,6 @@ export default function FilterDropDownUser() {
   const [name, setName] = useState(false);
   const [isFemale, setIsFemale] = useState(false);
   const [isMale, setIsMale] = useState(false);
-  const [data, setData] = useState([]);
 
   const router = useRouter();
 
