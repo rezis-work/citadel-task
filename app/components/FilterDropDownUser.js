@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { getUsers } from "../_lib/user-service";
 
-export default function FilterDropDownUser() {
+export default function FilterDropDownUser({ onFilterSubmit }) {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState("გიორგი");
   const [all, setAll] = useState(false);

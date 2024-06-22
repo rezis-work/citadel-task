@@ -1,27 +1,30 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { getUsers, deleteUser } from "../_lib/user-service";
+import { getUsers, deleteUser, patchUser } from "../_lib/user-service";
 import Spinner from "../components/Spinner";
 import { Table, Button, Popconfirm, message } from "antd";
 import Heading from "../components/Heading";
+import EditUserModal from "../components/EditUserModal";
 
 export default function UserPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingUser, setEditingUser] = useState(null);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+
+  const fetchUsers = async (filtereParams) => {
+    try {
+      const userData = await getUsers(filtereParams);
+      setUsers(userData);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const userData = await getUsers();
-        setUsers(userData);
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
-        setLoading(false);
-      }
-    };
-
     fetchUsers();
   }, []);
 
@@ -33,6 +36,25 @@ export default function UserPage() {
       message.success("User deleted successfully!");
     } catch (error) {
       message.error(`Failed to delete user: ${error.message}`);
+    }
+  };
+
+  const handleEdit = (user) => {
+    console.log("Editing user:", user);
+    setEditingUser(user);
+    setEditModalVisible(true);
+  };
+
+  const handleSaveEdit = async (userId, userData) => {
+    try {
+      const updatedUser = await patchUser(userId, userData);
+      setUsers((prevUsers) =>
+        prevUsers.map((user) => (user.id === userId ? updatedUser : user))
+      );
+      setEditModalVisible(false);
+      message.success("User updated successfully!");
+    } catch (error) {
+      message.error(`Failed to update user: ${error.message}`);
     }
   };
 
@@ -61,16 +83,21 @@ export default function UserPage() {
       title: "Action",
       key: "action",
       render: (text, record) => (
-        <Popconfirm
-          title="Are you sure to delete this user?"
-          onConfirm={() => handleDelete(record.key)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Button type="link" danger>
-            Delete
+        <>
+          <Button type="link" onClick={() => handleEdit(record)}>
+            Edit
           </Button>
-        </Popconfirm>
+          <Popconfirm
+            title="Are you sure to delete this user?"
+            onConfirm={() => handleDelete(record.key)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="link" danger>
+              Delete
+            </Button>
+          </Popconfirm>
+        </>
       ),
     },
   ];
@@ -85,7 +112,7 @@ export default function UserPage() {
 
   return (
     <div>
-      <Heading category="Users" />
+      <Heading category="Users" onFilterSubmit={fetchUsers} type="user" />
       {loading ? (
         <Spinner />
       ) : error ? (
@@ -97,6 +124,12 @@ export default function UserPage() {
       ) : (
         <p>Users not found</p>
       )}
+      <EditUserModal
+        visible={editModalVisible}
+        user={editingUser}
+        onCancel={() => setEditModalVisible(false)}
+        onSave={handleSaveEdit}
+      />
     </div>
   );
 }
