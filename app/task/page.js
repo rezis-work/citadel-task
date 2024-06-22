@@ -7,15 +7,29 @@ import { useTasks } from "../hooks/useTasks";
 import AddTaskModal from "../components/AddTaskModal";
 import { getUsers } from "../_lib/user-service";
 import EditTaskModal from "../components/EditTaskModal";
-import { nanoid } from "nanoid";
+import FilterDropDownTask from "../components/FilterDropDownTask";
 
 const TaskPage = () => {
-  const { tasks, loading, error, handleDelete, handleEdit, handleAdd } =
-    useTasks();
+  const {
+    tasks: allTasks,
+    loading,
+    error,
+    handleDelete,
+    handleEdit,
+    handleAdd,
+  } = useTasks();
   const [editingTask, setEditingTask] = useState(null);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [users, setUsers] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [filters, setFilters] = useState({
+    title: "",
+    description: "",
+    status: undefined,
+    assignedMember: undefined,
+    expired: false,
+  });
 
   const fetchUsers = async () => {
     try {
@@ -26,12 +40,45 @@ const TaskPage = () => {
     }
   };
 
-  console.log(tasks);
-  console.log(users);
-
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    setTasks(allTasks);
+  }, [allTasks]);
+
+  const handleFilterChange = (filters) => {
+    let filtered = [...allTasks];
+
+    if (filters.title) {
+      filtered = filtered.filter((task) =>
+        task.title.toLowerCase().includes(filters.title.toLowerCase())
+      );
+    }
+
+    if (filters.status) {
+      filtered = filtered.filter((task) => task.status === filters.status);
+    }
+
+    if (filters.assignedMember) {
+      filtered = filtered.filter(
+        (task) =>
+          task._assigned_member &&
+          task._assigned_member.id === filters.assignedMember
+      );
+    }
+
+    if (filters.expired) {
+      filtered = filtered.filter(
+        (task) =>
+          task.completion_date && new Date(task.completion_date) < new Date()
+      );
+    }
+
+    setTasks(filtered);
+    setFilters(filters); // Optionally, you can update the filters state here as well
+  };
 
   const openEditModal = (task) => {
     setEditingTask(task);
@@ -150,7 +197,10 @@ const TaskPage = () => {
 
   return (
     <div>
-      <Heading category="Tasks" filter="filter" />
+      <div className=" flex w-[1000px] mx-auto">
+        <Heading category="Tasks" filter="filter" />
+        <FilterDropDownTask users={users} onFilterChange={handleFilterChange} />
+      </div>
       {loading ? (
         <Spinner />
       ) : error ? (
@@ -173,7 +223,7 @@ const TaskPage = () => {
           <Table dataSource={dataSource} columns={columns} />
         </div>
       ) : (
-        <p>Tasks not found</p>
+        <p>No tasks found</p>
       )}
       <EditTaskModal
         open={editModalVisible}
