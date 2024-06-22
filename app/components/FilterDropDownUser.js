@@ -33,20 +33,11 @@ export default function FilterDropDownUser() {
       if (isMale) queryParams.gender = "male";
       if (isFemale) queryParams.gender = "female";
 
-      // Convert queryParams to string values
-      const formattedQueryParams = {};
-      Object.keys(queryParams).forEach((key) => {
-        formattedQueryParams[key] = queryParams[key].toString();
-      });
+      const data = await getUsers(queryParams.name, queryParams.gender);
 
-      const data = await getUsers(
-        formattedQueryParams.name,
-        formattedQueryParams.gender
-      );
+      console.log(data);
 
-      router.push(
-        `/user/${formattedQueryParams.name || formattedQueryParams.gender}`
-      );
+      router.push(`/user?`);
     } catch (error) {
       console.error("Error fetching filtered users:", error);
     }
