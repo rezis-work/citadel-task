@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Input, Button } from "antd";
 
-const EditUserModal = ({ visible, user, onCancel, onSave }) => {
+const EditUserModal = ({ open, user, onCancel, onSave }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
 
   return (
     <Modal
-      visible={visible}
+      open={open}
       title="Edit User"
       onCancel={onCancel}
       footer={[

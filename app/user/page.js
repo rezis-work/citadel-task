@@ -11,7 +11,6 @@ import { Table, Button, Popconfirm, message } from "antd";
 import Heading from "../components/Heading";
 import EditUserModal from "../components/EditUserModal";
 import AddUserModal from "../components/AddUserModal";
-import FilterDropDownUser from "../components/FilterDropDownUser";
 
 export default function UserPage() {
   const [users, setUsers] = useState([]);
