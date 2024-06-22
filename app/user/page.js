@@ -1,10 +1,16 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { getUsers, deleteUser, patchUser } from "../_lib/user-service";
+import {
+  getUsers,
+  deleteUser,
+  patchUser,
+  postUser,
+} from "../_lib/user-service";
 import Spinner from "../components/Spinner";
 import { Table, Button, Popconfirm, message } from "antd";
 import Heading from "../components/Heading";
 import EditUserModal from "../components/EditUserModal";
+import AddUserModal from "../components/AddUserModal";
 
 export default function UserPage() {
   const [users, setUsers] = useState([]);
@@ -12,6 +18,7 @@ export default function UserPage() {
   const [error, setError] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
   const [editModalVisible, setEditModalVisible] = useState(false);
+  const [addModalVisible, setAddModalVisible] = useState(false);
 
   const fetchUsers = async (filtereParams) => {
     try {
@@ -40,7 +47,6 @@ export default function UserPage() {
   };
 
   const handleEdit = (user) => {
-    console.log("Editing user:", user);
     setEditingUser(user);
     setEditModalVisible(true);
   };
@@ -55,6 +61,21 @@ export default function UserPage() {
       message.success("User updated successfully!");
     } catch (error) {
       message.error(`Failed to update user: ${error.message}`);
+    }
+  };
+
+  const handleAdd = () => {
+    setAddModalVisible(true);
+  };
+
+  const handleSaveAdd = async (userData) => {
+    try {
+      const newUser = await postUser(userData);
+      setUsers((prevUsers) => [...prevUsers, newUser]);
+      setAddModalVisible(false);
+      message.success("User added successfully!");
+    } catch (error) {
+      message.error(`Failed to add user: ${error.message}`);
     }
   };
 
@@ -119,6 +140,13 @@ export default function UserPage() {
         <p>Error fetching users: {error}</p>
       ) : users.length > 0 ? (
         <div className="w-[1200px] mx-auto">
+          <Button
+            type="primary"
+            onClick={handleAdd}
+            style={{ marginBottom: 16 }}
+          >
+            Add User
+          </Button>
           <Table dataSource={dataSource} columns={columns} />
         </div>
       ) : (
@@ -129,6 +157,11 @@ export default function UserPage() {
         user={editingUser}
         onCancel={() => setEditModalVisible(false)}
         onSave={handleSaveEdit}
+      />
+      <AddUserModal
+        visible={addModalVisible}
+        onCancel={() => setAddModalVisible(false)}
+        onSave={handleSaveAdd}
       />
     </div>
   );

@@ -1,21 +1,17 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { Modal, Form, Input, Button } from "antd";
+// components/AddUserModal.js
 
-const EditUserModal = ({ visible, user, onCancel, onSave }) => {
+import React, { useState } from "react";
+import { Modal, Form, Input, Button, message } from "antd";
+
+const AddUserModal = ({ visible, onCancel, onSave }) => {
   const [form] = Form.useForm();
-
-  useEffect(() => {
-    if (user) {
-      form.setFieldsValue(user);
-    }
-  }, [user, form]);
 
   const handleSave = () => {
     form
       .validateFields()
       .then((values) => {
-        onSave(user.key, values);
+        onSave(values);
+        form.resetFields();
       })
       .catch((info) => {
         console.log("Validate Failed:", info);
@@ -25,7 +21,7 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
   return (
     <Modal
       visible={visible}
-      title="Edit User"
+      title="Add User"
       onCancel={onCancel}
       footer={[
         <Button key="cancel" onClick={onCancel}>
@@ -51,10 +47,21 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
         >
           <Input />
         </Form.Item>
-        <Form.Item name="gender" label="Gender">
+        <Form.Item
+          name="gender"
+          label="Gender"
+          rules={[{ required: true, message: "Please input your gender" }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item name="birthday" label="Birthday">
+        <Form.Item
+          name="birthday"
+          label="Birthday"
+          rules={[{ required: true, message: "Please input your birthday" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item name="salary" label="Salary">
           <Input />
         </Form.Item>
       </Form>
@@ -62,4 +69,4 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
   );
 };
 
-export default EditUserModal;
+export default AddUserModal;
