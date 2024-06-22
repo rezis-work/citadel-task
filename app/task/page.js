@@ -1,9 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Table, Button, Popconfirm, message } from "antd";
 import Heading from "../components/Heading";
 import Spinner from "../components/Spinner";
 import { useTasks } from "../hooks/useTasks";
+import AddTaskModal from "../components/AddTaskModal";
+import { getUsers } from "../_lib/user-service";
 import EditTaskModal from "../components/EditTaskModal";
 
 const TaskPage = () => {
@@ -11,6 +13,21 @@ const TaskPage = () => {
     useTasks();
   const [editingTask, setEditingTask] = useState(null);
   const [editModalVisible, setEditModalVisible] = useState(false);
+  const [addModalVisible, setAddModalVisible] = useState(false);
+  const [users, setUsers] = useState([]);
+
+  const fetchUsers = async () => {
+    try {
+      const usersData = await getUsers({});
+      setUsers(usersData);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const openEditModal = (task) => {
     setEditingTask(task);
@@ -20,6 +37,14 @@ const TaskPage = () => {
   const closeEditModal = () => {
     setEditingTask(null);
     setEditModalVisible(false);
+  };
+
+  const openAddModal = () => {
+    setAddModalVisible(true);
+  };
+
+  const closeAddModal = () => {
+    setAddModalVisible(false);
   };
 
   const saveEdit = async (taskId, taskData) => {
@@ -32,6 +57,19 @@ const TaskPage = () => {
       message.error(`Failed to update task: ${error.message}`);
     } finally {
       closeEditModal();
+    }
+  };
+
+  const saveNewTask = async (taskData) => {
+    try {
+      console.log("Adding New Task:", taskData);
+      await handleAdd(taskData);
+      message.success("Task added successfully!");
+    } catch (error) {
+      console.error("Error adding task:", error);
+      message.error(`Failed to add task: ${error.message}`);
+    } finally {
+      closeAddModal();
     }
   };
 
@@ -107,7 +145,7 @@ const TaskPage = () => {
           <Button
             type="primary"
             onClick={() =>
-              handleAdd({
+              openAddModal({
                 title: "New Task",
                 description: "Description",
                 status: "pending",
@@ -127,6 +165,13 @@ const TaskPage = () => {
         onCancel={closeEditModal}
         onSave={saveEdit}
         task={editingTask}
+        users={users}
+      />
+      <AddTaskModal
+        open={addModalVisible}
+        onCancel={closeAddModal}
+        onSave={saveNewTask}
+        users={users}
       />
     </div>
   );
