@@ -1,19 +1,43 @@
 import React, { useEffect } from "react";
 import { Modal, Form, Input, DatePicker, Select, Button } from "antd";
-import moment from "moment"; // Ensure moment is imported
 
 const { Option } = Select;
 
 const AddTaskModal = ({ open, onCancel, onSave, users }) => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm(); // Initialize form instance
 
   useEffect(() => {
-    form.resetFields();
+    if (open) {
+      form.resetFields(); // Reset fields when modal opens
+    }
   }, [open, form]);
 
   const handleSave = () => {
     form.validateFields().then((values) => {
-      onSave(values);
+      const selectedUser = users.find((user) => user.id === values.fullname);
+
+      if (!selectedUser) {
+        console.error("Selected user not found in users array");
+        return;
+      }
+
+      const taskData = {
+        title: values.title,
+        description: values.description,
+        status: values.status,
+        _assigned_member: {
+          id: selectedUser.id,
+          firstname: selectedUser.firstname,
+          lastname: selectedUser.lastname,
+        },
+        completion_date: values.completion_date
+          ? values.completion_date.format("YYYY-MM-DD")
+          : null,
+      };
+
+      onSave(taskData); // Call onSave with taskData once
+
+      // Reset form fields after saving
       form.resetFields();
     });
   };
