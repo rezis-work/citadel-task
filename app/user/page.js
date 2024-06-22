@@ -11,6 +11,7 @@ import { Table, Button, Popconfirm, message } from "antd";
 import Heading from "../components/Heading";
 import EditUserModal from "../components/EditUserModal";
 import AddUserModal from "../components/AddUserModal";
+import FilterDropDownUser from "../components/FilterDropDownUser";
 
 export default function UserPage() {
   const [users, setUsers] = useState([]);
@@ -19,10 +20,11 @@ export default function UserPage() {
   const [editingUser, setEditingUser] = useState(null);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [addModalVisible, setAddModalVisible] = useState(false);
+  const [filterParams, setFilterParams] = useState({});
 
-  const fetchUsers = async (filtereParams) => {
+  const fetchUsers = async () => {
     try {
-      const userData = await getUsers(filtereParams);
+      const userData = await getUsers(filterParams);
       setUsers(userData);
       setLoading(false);
     } catch (error) {
@@ -33,7 +35,7 @@ export default function UserPage() {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [filterParams]);
 
   const handleDelete = async (userId) => {
     try {
@@ -77,6 +79,10 @@ export default function UserPage() {
     } catch (error) {
       message.error(`Failed to add user: ${error.message}`);
     }
+  };
+
+  const handleFilterSubmit = (queryParams) => {
+    setFilterParams(queryParams); // Update filterParams state with submitted query parameters
   };
 
   const columns = [
@@ -133,7 +139,11 @@ export default function UserPage() {
 
   return (
     <div>
-      <Heading category="Users" onFilterSubmit={fetchUsers} type="user" />
+      <Heading
+        category="Users"
+        onFilterSubmit={handleFilterSubmit}
+        type="user"
+      />
       {loading ? (
         <Spinner />
       ) : error ? (

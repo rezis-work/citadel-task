@@ -1,4 +1,4 @@
-export const getUsers = async (name, gender) => {
+export const getUsers = async ({ name, gender }) => {
   try {
     let URL = "https://x8ki-letl-twmt.n7.xano.io/api:tSDGfQun/members";
     const queryParams = [];

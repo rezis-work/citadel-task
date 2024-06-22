@@ -7,7 +7,7 @@ import { getUsers } from "../_lib/user-service";
 
 export default function FilterDropDownUser({ onFilterSubmit }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState("გიორგი");
+  const [search, setSearch] = useState("");
   const [all, setAll] = useState(false);
   const [name, setName] = useState(false);
   const [isFemale, setIsFemale] = useState(false);
@@ -26,16 +26,19 @@ export default function FilterDropDownUser({ onFilterSubmit }) {
     setIsOpen((open) => !open);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     try {
       let queryParams = {};
       if (name) queryParams.name = search;
       if (isMale) queryParams.gender = "male";
       if (isFemale) queryParams.gender = "female";
 
-      const data = await getUsers(queryParams.name, queryParams.gender);
+      onFilterSubmit(queryParams);
+      console.log(queryParams);
 
-      console.log(data);
+      const queryString = new URLSearchParams(queryParams).toString();
+      router.push(`/user?${queryString}`);
+      setIsOpen(false);
     } catch (error) {
       console.error("Error fetching filtered users:", error);
     }
