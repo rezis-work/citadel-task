@@ -8,6 +8,7 @@ import AddTaskModal from "../components/AddTaskModal";
 import { getUsers } from "../_lib/user-service";
 import EditTaskModal from "../components/EditTaskModal";
 import FilterDropDownTask from "../components/FilterDropDownTask";
+import { nanoid } from "nanoid";
 
 const TaskPage = () => {
   const {
@@ -78,6 +79,17 @@ const TaskPage = () => {
 
     setTasks(filtered);
     setFilters(filters); // Optionally, you can update the filters state here as well
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      title: "",
+      description: "",
+      status: undefined,
+      assignedMember: undefined,
+      expired: false,
+    });
+    setTasks(allTasks); // Reset tasks to default
   };
 
   const openEditModal = (task) => {
@@ -199,7 +211,14 @@ const TaskPage = () => {
     <div>
       <div className=" flex w-[1000px] mx-auto">
         <Heading category="Tasks" filter="filter" />
-        <FilterDropDownTask users={users} onFilterChange={handleFilterChange} />
+        <FilterDropDownTask
+          users={users}
+          onFilterChange={handleFilterChange}
+          onClearFilters={clearFilters} // Pass clearFilters function
+        />
+        <Button onClick={clearFilters} style={{ marginLeft: 10 }}>
+          Clear Filters
+        </Button>
       </div>
       {loading ? (
         <Spinner />

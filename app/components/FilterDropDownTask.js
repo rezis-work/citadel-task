@@ -4,7 +4,7 @@ import { DownOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
-const FilterDropDownTask = ({ users, onFilterChange }) => {
+const FilterDropDownTask = ({ users, onFilterChange, onClearFilters }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [filters, setFilters] = useState({
     title: "",
@@ -37,6 +37,18 @@ const FilterDropDownTask = ({ users, onFilterChange }) => {
   const applyFilters = () => {
     onFilterChange(filters);
     setMenuVisible(false); // Close dropdown after applying filters
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      title: "",
+      description: "",
+      status: undefined,
+      assignedMember: undefined,
+      expired: false,
+    });
+    onClearFilters(); // Notify parent component to clear filters
+    setMenuVisible(false); // Close dropdown after clearing filters
   };
 
   const handleMenuVisibleChange = (visible) => {
@@ -102,10 +114,14 @@ const FilterDropDownTask = ({ users, onFilterChange }) => {
           Expired Work
         </Checkbox>
       </Menu.Item>
+      <Menu.Divider />
       <Menu.Item key="apply">
         <Button type="primary" onClick={applyFilters}>
           Apply Filters
         </Button>
+      </Menu.Item>
+      <Menu.Item key="clear">
+        <Button onClick={clearFilters}>Clear Filters</Button>
       </Menu.Item>
     </Menu>
   );
