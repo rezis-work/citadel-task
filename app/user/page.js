@@ -3,7 +3,6 @@ import { getUsers } from "../_lib/user-service";
 import Spinner from "../components/Spinner";
 import { Table } from "antd";
 import Heading from "../components/Heading";
-import { getColumns, getDataSource } from "../_utils/tableSourse";
 
 export default async function UserPage() {
   let users = [];
@@ -11,28 +10,56 @@ export default async function UserPage() {
 
   try {
     users = await getUsers();
-  } catch (err) {
+  } catch (error) {
     error = err.message;
   }
 
   if (!users) return <Spinner />;
 
-  const columnNames = {
-    first: "Firstname",
-    second: "Lastname",
-    third: "Gender",
-    fourth: "Birthday",
-    fifth: "Action",
-  };
+  console.log(users);
 
-  const columns = getColumns(columnNames);
-  const dataSource = getDataSource(users, columnNames, "action", "users");
+  const columns = [
+    {
+      title: "Firstname",
+      dataIndex: "firstname",
+      key: "firstname",
+    },
+    {
+      title: "Lastname",
+      dataIndex: "lastname",
+      key: "lastname",
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+    },
+    {
+      title: "Birthday",
+      dataIndex: "birthday",
+      key: "birthday",
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+    },
+  ];
+
+  const dataSource = users.map((user) => ({
+    key: user.id,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    gender: user.gender,
+    birthday: user.birthday,
+    action: "Action", // Placeholder for action column
+  }));
 
   return (
     <div>
       <Heading category="Users" />
       {error ? (
-        <p>Error fetching users: {error}</p>
+        <p>Error fetching users: {}</p>
       ) : users.length > 0 ? (
         <div className=" w-[1200px] mx-auto">
           <Table dataSource={dataSource} columns={columns} />

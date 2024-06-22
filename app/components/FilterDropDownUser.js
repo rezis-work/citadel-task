@@ -12,6 +12,7 @@ export default function FilterDropDownUser() {
   const [name, setName] = useState(false);
   const [isFemale, setIsFemale] = useState(false);
   const [isMale, setIsMale] = useState(false);
+  const [data, setData] = useState([]);
 
   const router = useRouter();
 
@@ -36,8 +37,6 @@ export default function FilterDropDownUser() {
       const data = await getUsers(queryParams.name, queryParams.gender);
 
       console.log(data);
-
-      router.push(`/user?`);
     } catch (error) {
       console.error("Error fetching filtered users:", error);
     }

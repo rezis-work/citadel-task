@@ -1,7 +1,6 @@
 import React from "react";
 import { getTasks } from "../_lib/task-service";
 import Spinner from "../components/Spinner";
-import { getColumns, getDataSource } from "../_utils/tableSourse";
 import { Table } from "antd";
 import Heading from "../components/Heading";
 
@@ -17,16 +16,44 @@ export default async function TaskPage() {
 
   if (!tasks) return <Spinner />;
 
-  const columnNames = {
-    first: "Fullname",
-    second: "Title",
-    third: "Description",
-    fourth: "Status",
-    fifth: "Action",
-  };
+  const columns = [
+    {
+      title: "Fullname",
+      dataIndex: "fullname",
+      key: "fullname",
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+    },
+  ];
 
-  const columns = getColumns(columnNames);
-  const dataSource = getDataSource(tasks, columnNames, "action", "tasks");
+  const dataSource = tasks.map((task) => ({
+    key: task.id,
+    fullname: `${task._assigned_member?.firstname || ""} ${
+      task._assigned_member?.lastname || ""
+    }`,
+    title: task.title,
+    description: task.description,
+    status: task.status,
+    action: "action", // Replace with actual action logic
+  }));
 
   return (
     <div>
