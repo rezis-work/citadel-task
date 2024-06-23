@@ -9,6 +9,7 @@ import { getUsers } from "../_lib/user-service";
 import EditTaskModal from "../components/EditTaskModal";
 import FilterDropDownTask from "../components/FilterDropDownTask";
 import { nanoid } from "nanoid";
+import Sidebar from "../components/Sidebar";
 
 const TaskPage = () => {
   const {
@@ -208,56 +209,59 @@ const TaskPage = () => {
   }));
 
   return (
-    <div>
-      <div className=" flex w-[1000px] mx-auto">
-        <Heading category="Tasks" filter="filter" />
-        <FilterDropDownTask
-          users={users}
-          onFilterChange={handleFilterChange}
-          onClearFilters={clearFilters} // Pass clearFilters function
-        />
-        <Button onClick={clearFilters} style={{ marginLeft: 10 }}>
-          Clear Filters
-        </Button>
-      </div>
-      {loading ? (
-        <Spinner />
-      ) : error ? (
-        <p>Error fetching tasks: {error}</p>
-      ) : tasks.length > 0 ? (
-        <div className="w-[1200px] mx-auto">
-          <Button
-            type="primary"
-            onClick={() =>
-              openAddModal({
-                title: "New Task",
-                description: "Description",
-                status: "pending",
-              })
-            }
-            style={{ marginBottom: 16 }}
-          >
-            Add Task
+    <>
+      <Sidebar />
+      <div className="pt-4 pb-40 ">
+        <div className=" flex w-[1200px] mx-auto pt-10 border-b-2 mb-10">
+          <Heading category="Tasks" filter="filter" />
+          <FilterDropDownTask
+            users={users}
+            onFilterChange={handleFilterChange}
+            onClearFilters={clearFilters} // Pass clearFilters function
+          />
+          <Button onClick={clearFilters} style={{ marginLeft: 10 }}>
+            Clear Filters
           </Button>
-          <Table dataSource={dataSource} columns={columns} />
         </div>
-      ) : (
-        <p>No tasks found</p>
-      )}
-      <EditTaskModal
-        open={editModalVisible}
-        onCancel={closeEditModal}
-        onSave={saveEdit}
-        task={editingTask}
-        users={users}
-      />
-      <AddTaskModal
-        open={addModalVisible}
-        onCancel={closeAddModal}
-        onSave={saveNewTask}
-        users={users}
-      />
-    </div>
+        {loading ? (
+          <Spinner />
+        ) : error ? (
+          <p>Error fetching tasks: {error}</p>
+        ) : tasks.length > 0 ? (
+          <div className="w-[1200px] mx-auto">
+            <Button
+              type="primary"
+              onClick={() =>
+                openAddModal({
+                  title: "New Task",
+                  description: "Description",
+                  status: "pending",
+                })
+              }
+              style={{ marginBottom: 16 }}
+            >
+              Add Task
+            </Button>
+            <Table dataSource={dataSource} columns={columns} />
+          </div>
+        ) : (
+          <p>No tasks found</p>
+        )}
+        <EditTaskModal
+          open={editModalVisible}
+          onCancel={closeEditModal}
+          onSave={saveEdit}
+          task={editingTask}
+          users={users}
+        />
+        <AddTaskModal
+          open={addModalVisible}
+          onCancel={closeAddModal}
+          onSave={saveNewTask}
+          users={users}
+        />
+      </div>
+    </>
   );
 };
 

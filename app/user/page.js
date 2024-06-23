@@ -11,6 +11,7 @@ import { Table, Button, Popconfirm, message } from "antd";
 import Heading from "../components/Heading";
 import EditUserModal from "../components/EditUserModal";
 import AddUserModal from "../components/AddUserModal";
+import Sidebar from "../components/Sidebar";
 
 export default function UserPage() {
   const [users, setUsers] = useState([]);
@@ -137,41 +138,46 @@ export default function UserPage() {
   }));
 
   return (
-    <div>
-      <Heading
-        category="Users"
-        onFilterSubmit={handleFilterSubmit}
-        type="user"
-      />
-      {loading ? (
-        <Spinner />
-      ) : error ? (
-        <p>Error fetching users: {error}</p>
-      ) : users.length > 0 ? (
-        <div className="w-[1200px] mx-auto">
-          <Button
-            type="primary"
-            onClick={handleAdd}
-            style={{ marginBottom: 16 }}
-          >
-            Add User
-          </Button>
-          <Table dataSource={dataSource} columns={columns} />
+    <>
+      <Sidebar />
+      <div className="pt-10 pb-40">
+        <div className=" border-b-2 mb-6">
+          <Heading
+            category="Users Page"
+            onFilterSubmit={handleFilterSubmit}
+            type="user"
+          />
         </div>
-      ) : (
-        <p>Users not found</p>
-      )}
-      <EditUserModal
-        visible={editModalVisible}
-        user={editingUser}
-        onCancel={() => setEditModalVisible(false)}
-        onSave={handleSaveEdit}
-      />
-      <AddUserModal
-        visible={addModalVisible}
-        onCancel={() => setAddModalVisible(false)}
-        onSave={handleSaveAdd}
-      />
-    </div>
+        {loading ? (
+          <Spinner />
+        ) : error ? (
+          <p>Error fetching users: {error}</p>
+        ) : users.length > 0 ? (
+          <div className="w-[1200px] mx-auto">
+            <Button
+              type="primary"
+              onClick={handleAdd}
+              style={{ marginBottom: 16 }}
+            >
+              Add User
+            </Button>
+            <Table dataSource={dataSource} columns={columns} />
+          </div>
+        ) : (
+          <p>Users not found</p>
+        )}
+        <EditUserModal
+          visible={editModalVisible}
+          user={editingUser}
+          onCancel={() => setEditModalVisible(false)}
+          onSave={handleSaveEdit}
+        />
+        <AddUserModal
+          visible={addModalVisible}
+          onCancel={() => setAddModalVisible(false)}
+          onSave={handleSaveAdd}
+        />
+      </div>
+    </>
   );
 }
