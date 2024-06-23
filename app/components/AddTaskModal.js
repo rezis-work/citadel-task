@@ -4,11 +4,11 @@ import { Modal, Form, Input, DatePicker, Select, Button } from "antd";
 const { Option } = Select;
 
 const AddTaskModal = ({ open, onCancel, onSave, users }) => {
-  const [form] = Form.useForm(); // Initialize form instance
+  const [form] = Form.useForm();
 
   useEffect(() => {
     if (open) {
-      form.resetFields(); // Reset fields when modal opens
+      form.resetFields();
     }
   }, [open, form]);
 
@@ -22,8 +22,8 @@ const AddTaskModal = ({ open, onCancel, onSave, users }) => {
       }
 
       const taskData = {
-        title: values.title.trim(), // Trim the title input
-        description: values.description.trim(), // Trim the description input
+        title: values.title.trim(),
+        description: values.description.trim(),
         status: values.status,
         assigned_member_id: selectedUser.id,
         completion_date: values.completion_date
@@ -31,9 +31,8 @@ const AddTaskModal = ({ open, onCancel, onSave, users }) => {
           : null,
       };
 
-      onSave(taskData); // Call onSave with taskData
+      onSave(taskData);
 
-      // Reset form fields after saving
       form.resetFields();
     });
   };
@@ -47,7 +46,7 @@ const AddTaskModal = ({ open, onCancel, onSave, users }) => {
 
   return (
     <Modal
-      visible={open} // Corrected prop name to 'visible'
+      visible={open}
       title="Add Task"
       onCancel={onCancel}
       footer={[
