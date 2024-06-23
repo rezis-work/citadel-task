@@ -126,19 +126,7 @@ const TaskPage = () => {
 
   const saveNewTask = async (taskData) => {
     try {
-      // Construct taskData with assigned member as an object
-      const formData = {
-        title: taskData.title,
-        description: taskData.description,
-        status: taskData.status,
-        _assigned_member: {
-          id: nanoid(), // Assuming fullname contains the ID of the user
-          firstname: "", // Retrieve from user data or input field
-          lastname: "", // Retrieve from user data or input field
-        },
-        completion_date: taskData.completion_date,
-      };
-      await handleAdd(formData);
+      await handleAdd(taskData);
       message.success("Task added successfully!");
     } catch (error) {
       console.error("Error adding task:", error);

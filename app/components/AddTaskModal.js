@@ -25,17 +25,13 @@ const AddTaskModal = ({ open, onCancel, onSave, users }) => {
         title: values.title,
         description: values.description,
         status: values.status,
-        _assigned_member: {
-          id: selectedUser.id,
-          firstname: selectedUser.firstname,
-          lastname: selectedUser.lastname,
-        },
+        assigned_member_id: selectedUser.id,
         completion_date: values.completion_date
           ? values.completion_date.format("YYYY-MM-DD")
           : null,
       };
 
-      onSave(taskData); // Call onSave with taskData once
+      onSave(taskData); // Call onSave with taskData
 
       // Reset form fields after saving
       form.resetFields();
@@ -86,7 +82,13 @@ const AddTaskModal = ({ open, onCancel, onSave, users }) => {
             <Option value="completed">Completed</Option>
           </Select>
         </Form.Item>
-        <Form.Item name="fullname" label="Assigned Member">
+        <Form.Item
+          name="fullname"
+          label="Assigned Member"
+          rules={[
+            { required: true, message: "Please select an assigned member!" },
+          ]}
+        >
           <Select placeholder="Select an assigned member">
             {users.map((user) => (
               <Option key={user.id} value={user.id}>
