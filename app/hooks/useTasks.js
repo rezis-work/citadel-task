@@ -39,7 +39,6 @@ export const useTasks = () => {
 
   const handleEdit = async (taskId, taskData) => {
     try {
-      console.log("Patching Task:", { taskId, taskData });
       const updatedTask = await patchTask(taskId, taskData);
       setTasks((prevTasks) =>
         prevTasks.map((task) => (task.id === taskId ? updatedTask : task))

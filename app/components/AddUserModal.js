@@ -75,7 +75,7 @@ const AddUserModal = ({ visible, onCancel, onSave }) => {
       <Form form={form} layout="vertical">
         <Form.Item
           name="firstname"
-          label="Firstname"
+          label="First name"
           rules={[
             { required: true, message: "Please input the firstname!" },
             { validator: validateName },
@@ -85,7 +85,7 @@ const AddUserModal = ({ visible, onCancel, onSave }) => {
         </Form.Item>
         <Form.Item
           name="lastname"
-          label="Lastname"
+          label="Last name"
           rules={[
             { required: true, message: "Please input the lastname!" },
             { validator: validateName },
