@@ -38,9 +38,6 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
   };
 
   const validateBirthday = (_, value) => {
-    if (!value) {
-      return Promise.reject("Please input the birthday!");
-    }
     const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
     if (!dateFormat.test(value)) {
       return Promise.reject("Please input the birthday in format YYYY-MM-DD!");
@@ -50,10 +47,7 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
 
   const validateGeorgianAndEnglishLetters = (_, value) => {
     const georgianAndEnglishRegex = /^[\u10D0-\u10F6\u10F7a-zA-Z\s]*$/; // Georgian letters, English letters, and spaces
-    if (!value) {
-      return Promise.reject("Please input the firstname or lastname!");
-    }
-    if (!georgianAndEnglishRegex.test(value)) {
+    if (!georgianAndEnglishRegex.test(value.trim())) {
       return Promise.reject("Please input only Georgian and English letters!");
     }
     return Promise.resolve();
@@ -79,7 +73,10 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
           label="Firstname"
           rules={[
             { required: true, message: "Please input the firstname!" },
-            { validator: validateGeorgianAndEnglishLetters },
+            {
+              validator: (_, value) =>
+                validateGeorgianAndEnglishLetters(_, value),
+            },
           ]}
         >
           <Input />
@@ -89,7 +86,10 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
           label="Lastname"
           rules={[
             { required: true, message: "Please input the lastname!" },
-            { validator: validateGeorgianAndEnglishLetters },
+            {
+              validator: (_, value) =>
+                validateGeorgianAndEnglishLetters(_, value),
+            },
           ]}
         >
           <Input />
