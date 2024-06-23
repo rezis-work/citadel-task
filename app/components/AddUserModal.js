@@ -1,5 +1,6 @@
 import React from "react";
-import { Modal, Form, Input, Button, Select } from "antd";
+import { Modal, Form, Input, Button, Select, message } from "antd";
+import moment from "moment";
 
 const { Option } = Select;
 
@@ -37,18 +38,23 @@ const AddUserModal = ({ visible, onCancel, onSave }) => {
 
   // Custom validator for birthday
   const validateBirthday = (_, value) => {
-    const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
-    if (!dateFormat.test(value)) {
+    const dateFormat = "YYYY-MM-DD";
+    if (!moment(value, dateFormat, true).isValid()) {
       return Promise.reject("Please input the birthday in format YYYY-MM-DD!");
     }
-    return Promise.resolve();
-  };
 
-  // Custom validator for salary (optional field)
-  const validateSalary = (_, value) => {
-    if (value && isNaN(value)) {
-      return Promise.reject("Salary should be a number!");
+    const birthDate = moment(value);
+    const today = moment();
+    const yearsDiff = today.diff(birthDate, "years");
+
+    // Calculate the date exactly 18 years ago from today
+    const minDate = today.clone().subtract(18, "years");
+
+    // Compare with the birth date
+    if (birthDate.isAfter(minDate)) {
+      return Promise.reject("You must be at least 18 years old!");
     }
+
     return Promise.resolve();
   };
 
@@ -110,11 +116,7 @@ const AddUserModal = ({ visible, onCancel, onSave }) => {
         >
           <Input placeholder="YYYY-MM-DD" />
         </Form.Item>
-        <Form.Item
-          name="salary"
-          label="Salary"
-          rules={[{ validator: validateSalary }]}
-        >
+        <Form.Item name="salary" label="Salary">
           <Input />
         </Form.Item>
       </Form>
