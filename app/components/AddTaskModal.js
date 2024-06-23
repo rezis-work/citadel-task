@@ -22,8 +22,8 @@ const AddTaskModal = ({ open, onCancel, onSave, users }) => {
       }
 
       const taskData = {
-        title: values.title,
-        description: values.description,
+        title: values.title.trim(), // Trim the title input
+        description: values.description.trim(), // Trim the description input
         status: values.status,
         assigned_member_id: selectedUser.id,
         completion_date: values.completion_date
@@ -38,9 +38,16 @@ const AddTaskModal = ({ open, onCancel, onSave, users }) => {
     });
   };
 
+  const validateTrimmedInput = (_, value) => {
+    if (!value || value.trim() === "") {
+      return Promise.reject("This field cannot be empty!");
+    }
+    return Promise.resolve();
+  };
+
   return (
     <Modal
-      open={open}
+      visible={open} // Corrected prop name to 'visible'
       title="Add Task"
       onCancel={onCancel}
       footer={[
@@ -56,7 +63,10 @@ const AddTaskModal = ({ open, onCancel, onSave, users }) => {
         <Form.Item
           name="title"
           label="Title"
-          rules={[{ required: true, message: "Please input the task title!" }]}
+          rules={[
+            { required: true, message: "Please input the task title!" },
+            { validator: validateTrimmedInput },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -65,6 +75,7 @@ const AddTaskModal = ({ open, onCancel, onSave, users }) => {
           label="Description"
           rules={[
             { required: true, message: "Please input the task description!" },
+            { validator: validateTrimmedInput },
           ]}
         >
           <Input.TextArea rows={4} />
