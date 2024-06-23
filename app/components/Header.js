@@ -18,8 +18,8 @@ const Header = () => {
         </h1>
         <nav>
           <ul className=" flex gap-3">
-            <NavLink route={"user"} text={"users"} />
-            <NavLink route={"task"} text={"tasks"} />
+            <NavLink route={"user"} text={"Users"} />
+            <NavLink route={"task"} text={"Tasks"} />
           </ul>
         </nav>
       </header>

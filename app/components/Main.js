@@ -22,7 +22,7 @@ const Main = () => {
           </h1>
 
           <p className="mt-4 sm:text-xl/relaxed">
-            here you can check your employes and their tasks
+            here you can check your employees and their tasks
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-4">
