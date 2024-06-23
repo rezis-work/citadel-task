@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Modal, Form, Input, Button } from "antd";
 
-const EditUserModal = ({ open, user, onCancel, onSave }) => {
+const EditUserModal = ({ visible, user, onCancel, onSave }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const EditUserModal = ({ open, user, onCancel, onSave }) => {
 
   return (
     <Modal
-      open={open}
+      visible={visible} // Corrected prop name to 'visible'
       title="Edit User"
       onCancel={onCancel}
       footer={[

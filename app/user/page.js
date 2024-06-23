@@ -17,8 +17,8 @@ export default function UserPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingUser, setEditingUser] = useState(null);
-  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingUser, setEditingUser] = useState(null); // State to hold the user being edited
+  const [editModalVisible, setEditModalVisible] = useState(false); // State to control modal visibility
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [filterParams, setFilterParams] = useState({});
 
@@ -49,8 +49,8 @@ export default function UserPage() {
   };
 
   const handleEdit = (user) => {
-    setEditingUser(user);
-    setEditModalVisible(true);
+    setEditingUser(user); // Set the user being edited
+    setEditModalVisible(true); // Open the edit modal
   };
 
   const handleSaveEdit = async (userId, userData) => {
@@ -59,7 +59,7 @@ export default function UserPage() {
       setUsers((prevUsers) =>
         prevUsers.map((user) => (user.id === userId ? updatedUser : user))
       );
-      setEditModalVisible(false);
+      setEditModalVisible(false); // Close the edit modal after saving
       message.success("User updated successfully!");
     } catch (error) {
       message.error(`Failed to update user: ${error.message}`);
