@@ -164,7 +164,7 @@ export default function UserPage() {
             <Table dataSource={dataSource} columns={columns} />
           </div>
         ) : (
-          <p>Users not found</p>
+          <p className=" text-center">Users not found</p>
         )}
         <EditUserModal
           visible={editModalVisible}

@@ -251,7 +251,7 @@ const TaskPage = () => {
             <Table dataSource={dataSource} columns={columns} />
           </div>
         ) : (
-          <p>No tasks found</p>
+          <p className=" text-center">No tasks found</p>
         )}
         <EditTaskModal
           open={editModalVisible}
