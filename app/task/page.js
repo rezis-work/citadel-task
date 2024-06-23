@@ -206,6 +206,12 @@ const TaskPage = () => {
     description: task.description,
     completion_date: task.completion_date,
     status: task.status,
+    style: {
+      backgroundColor:
+        task.completion_date && new Date(task.completion_date) < new Date()
+          ? "#FECACA"
+          : "inherit",
+    },
   }));
 
   return (
