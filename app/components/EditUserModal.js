@@ -1,14 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Form, Input, Button, Select } from "antd";
+import moment from "moment";
 
 const { Option } = Select;
 
 const EditUserModal = ({ visible, user, onCancel, onSave }) => {
   const [form] = Form.useForm();
+  const [birthday, setBirthday] = useState(null);
 
   useEffect(() => {
     if (user) {
-      form.setFieldsValue(user);
+      const formattedBirthday = user.birthday
+        ? moment(user.birthday).format("YYYY-MM-DD")
+        : null;
+      form.setFieldsValue({
+        ...user,
+        birthday: formattedBirthday,
+      });
+      setBirthday(formattedBirthday);
     }
   }, [user, form]);
 
@@ -16,11 +25,38 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
     form
       .validateFields()
       .then((values) => {
-        onSave(user.key, values);
+        onSave(user.key, { ...values, birthday });
       })
       .catch((info) => {
         console.log("Validate Failed:", info);
       });
+  };
+
+  const handleBirthdayChange = (e) => {
+    const value = e.target.value.trim();
+    setBirthday(value);
+  };
+
+  const validateBirthday = (_, value) => {
+    if (!value) {
+      return Promise.reject("Please input the birthday!");
+    }
+    const dateFormat = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateFormat.test(value)) {
+      return Promise.reject("Please input the birthday in format YYYY-MM-DD!");
+    }
+    return Promise.resolve();
+  };
+
+  const validateGeorgianAndEnglishLetters = (_, value) => {
+    const georgianAndEnglishRegex = /^[\u10D0-\u10F6\u10F7a-zA-Z\s]*$/; // Georgian letters, English letters, and spaces
+    if (!value) {
+      return Promise.reject("Please input the firstname or lastname!");
+    }
+    if (!georgianAndEnglishRegex.test(value)) {
+      return Promise.reject("Please input only Georgian and English letters!");
+    }
+    return Promise.resolve();
   };
 
   return (
@@ -41,14 +77,20 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
         <Form.Item
           name="firstname"
           label="Firstname"
-          rules={[{ required: true, message: "Please input the firstname!" }]}
+          rules={[
+            { required: true, message: "Please input the firstname!" },
+            { validator: validateGeorgianAndEnglishLetters },
+          ]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name="lastname"
           label="Lastname"
-          rules={[{ required: true, message: "Please input the lastname!" }]}
+          rules={[
+            { required: true, message: "Please input the lastname!" },
+            { validator: validateGeorgianAndEnglishLetters },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -65,9 +107,16 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
         <Form.Item
           name="birthday"
           label="Birthday"
-          rules={[{ required: true, message: "Please input the birthday!" }]}
+          rules={[
+            { required: true, message: "Please input the birthday!" },
+            { validator: validateBirthday },
+          ]}
         >
-          <Input />
+          <Input
+            placeholder="YYYY-MM-DD"
+            value={birthday || ""}
+            onChange={handleBirthdayChange}
+          />
         </Form.Item>
       </Form>
     </Modal>
