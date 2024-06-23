@@ -109,7 +109,10 @@ const EditTaskModal = ({ open, onCancel, onSave, task, users }) => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item name="completion_date" label="Completion Date">
+        <Form.Item
+          name="completion_date"
+          label="Completion Date, delete and add new date"
+        >
           <DatePicker />
         </Form.Item>
       </Form>

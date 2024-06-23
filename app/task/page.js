@@ -8,7 +8,6 @@ import AddTaskModal from "../components/AddTaskModal";
 import { getUsers } from "../_lib/user-service";
 import EditTaskModal from "../components/EditTaskModal";
 import FilterDropDownTask from "../components/FilterDropDownTask";
-import { nanoid } from "nanoid";
 import Sidebar from "../components/Sidebar";
 
 const TaskPage = () => {
