@@ -136,6 +136,14 @@ const TaskPage = () => {
     }
   };
 
+  const extractUniqueValues = (data, key) => {
+    return [...new Set(data.map((item) => item[key]))];
+  };
+
+  const uniqueTitles = extractUniqueValues(tasks, "title");
+  const uniqueDescriptions = extractUniqueValues(tasks, "description");
+  const uniqueStatuses = extractUniqueValues(tasks, "status");
+
   const columns = [
     {
       title: "Fullname",
@@ -146,11 +154,25 @@ const TaskPage = () => {
       title: "Title",
       dataIndex: "title",
       key: "title",
+      filters: uniqueTitles.map((title) => ({
+        text: title,
+        value: title,
+      })),
+      filterSearch: true,
+      onFilter: (value, record) =>
+        record.title.toLowerCase().includes(value.toLowerCase()),
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
+      filters: uniqueDescriptions.map((description) => ({
+        text: description,
+        value: description,
+      })),
+      filterSearch: true,
+      onFilter: (value, record) =>
+        record.description.toLowerCase().includes(value.toLowerCase()),
     },
     {
       title: "Completion Date",
@@ -161,10 +183,18 @@ const TaskPage = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
+
+      filters: uniqueStatuses.map((status) => ({
+        text: status,
+        value: status,
+      })),
+      filterSearch: true,
+      onFilter: (value, record) => record.status === value,
     },
     {
       title: "Action",
       key: "action",
+      fixed: "right",
       render: (text, record) => (
         <>
           <Button type="link" onClick={() => openEditModal(record)}>
@@ -213,9 +243,11 @@ const TaskPage = () => {
 
   return (
     <>
-      <Sidebar />
-      <div className="pt-4 pb-40 ">
-        <div className=" flex w-[1200px] mx-auto pt-10 border-b-2 mb-10">
+      <div className=" opacity-0 xl:opacity-100 z-50">
+        <Sidebar />
+      </div>
+      <div className="pt-4 pb-40 overflow-x-hidden">
+        <div className=" flex flex-col lg:flex-row w-[300px] lg:w-[1200px] mx-auto pt-10 border-b-2 pb-3 mb-10">
           <Heading category="Tasks" filter="filter" />
           <FilterDropDownTask
             users={users}
@@ -231,7 +263,7 @@ const TaskPage = () => {
         ) : error ? (
           <p>Error fetching tasks: {error}</p>
         ) : tasks.length > 0 ? (
-          <div className="w-[1200px] mx-auto">
+          <div className="xl:w-[1200px] lg:w-[800px] mx-auto pl-2 lg:pl-0 z-0 ">
             <Button
               type="primary"
               onClick={() =>
@@ -249,6 +281,8 @@ const TaskPage = () => {
               dataSource={dataSource}
               columns={columns}
               rowClassName={rowClassName}
+              scroll={{ x: 700, y: 300 }}
+              pagination={{ pageSize: 5 }}
             />
           </div>
         ) : (

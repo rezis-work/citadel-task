@@ -132,7 +132,10 @@ const FilterDropDownTask = ({ users, onFilterChange, onClearFilters }) => {
       visible={menuVisible}
       onVisibleChange={handleMenuVisibleChange}
     >
-      <Button icon={<DownOutlined />} style={{ marginRight: 8 }}>
+      <Button
+        icon={<DownOutlined />}
+        style={{ marginRight: 8, marginBottom: 8 }}
+      >
         Filters
       </Button>
     </Dropdown>

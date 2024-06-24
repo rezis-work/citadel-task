@@ -12,7 +12,7 @@ const Header = () => {
       transition={{ duration: 0.5 }}
       className="bg-gray-200 text-gray-700"
     >
-      <header className="flex justify-between w-[1000px] mx-auto py-10 ">
+      <header className="flex justify-between w-[300px] xl:w-[1000px] mx-auto py-10 ">
         <h1 className=" text-2xl font-bold  ">
           <Link href={"/"}>Citadeli</Link>
         </h1>
