@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 const Sidebar = () => {
   return (
     <motion.div
-      initial={{ x: -240 }} // width of the sidebar (adjust if needed)
+      initial={{ x: -240 }}
       animate={{ x: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
       className="h-screen w-60 fixed left-0 bg-gray-400 flex flex-col justify-start items-center pt-10"

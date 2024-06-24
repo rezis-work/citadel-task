@@ -1,11 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Table, Button, Popconfirm, message } from "antd";
+
+import { getUsers } from "../_lib/user-service";
+import { useTasks } from "../hooks/useTasks";
 import Heading from "../components/Heading";
 import Spinner from "../components/Spinner";
-import { useTasks } from "../hooks/useTasks";
 import AddTaskModal from "../components/AddTaskModal";
-import { getUsers } from "../_lib/user-service";
 import EditTaskModal from "../components/EditTaskModal";
 import FilterDropDownTask from "../components/FilterDropDownTask";
 import Sidebar from "../components/Sidebar";
@@ -78,7 +79,7 @@ const TaskPage = () => {
     }
 
     setTasks(filtered);
-    setFilters(filters); // Optionally, you can update the filters state here as well
+    setFilters(filters);
   };
 
   const clearFilters = () => {
@@ -89,7 +90,7 @@ const TaskPage = () => {
       assignedMember: undefined,
       expired: false,
     });
-    setTasks(allTasks); // Reset tasks to default
+    setTasks(allTasks);
   };
 
   const openEditModal = (task) => {
@@ -219,7 +220,7 @@ const TaskPage = () => {
           <FilterDropDownTask
             users={users}
             onFilterChange={handleFilterChange}
-            onClearFilters={clearFilters} // Pass clearFilters function
+            onClearFilters={clearFilters}
           />
           <Button onClick={clearFilters} style={{ marginLeft: 10 }}>
             Clear Filters

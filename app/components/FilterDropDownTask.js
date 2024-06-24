@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Dropdown, Menu, Checkbox, Button, Input, Select } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 
@@ -36,7 +36,7 @@ const FilterDropDownTask = ({ users, onFilterChange, onClearFilters }) => {
 
   const applyFilters = () => {
     onFilterChange(filters);
-    setMenuVisible(false); // Close dropdown after applying filters
+    setMenuVisible(false);
   };
 
   const clearFilters = () => {
@@ -47,15 +47,13 @@ const FilterDropDownTask = ({ users, onFilterChange, onClearFilters }) => {
       assignedMember: undefined,
       expired: false,
     });
-    onClearFilters(); // Notify parent component to clear filters
-    setMenuVisible(false); // Close dropdown after clearing filters
+    onClearFilters();
+    setMenuVisible(false);
   };
 
   const handleMenuVisibleChange = (visible) => {
     setMenuVisible(visible);
-    // Optionally handle visibility change, e.g., to reset filters
     if (!visible) {
-      // Reset filters when the dropdown closes
       setFilters({
         title: "",
         description: "",

@@ -46,7 +46,7 @@ const EditUserModal = ({ visible, user, onCancel, onSave }) => {
   };
 
   const validateGeorgianAndEnglishLetters = (_, value) => {
-    const georgianAndEnglishRegex = /^[\u10D0-\u10F6\u10F7a-zA-Z\s]*$/; // Georgian letters, English letters, and spaces
+    const georgianAndEnglishRegex = /^[\u10D0-\u10F6\u10F7a-zA-Z\s]*$/;
     if (!georgianAndEnglishRegex.test(value.trim())) {
       return Promise.reject("Please input only Georgian and English letters!");
     }

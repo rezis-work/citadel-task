@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Modal, Form, Input, DatePicker, Select } from "antd";
 import moment from "moment";
 
@@ -13,7 +13,7 @@ const EditTaskModal = ({ open, onCancel, onSave, task, users }) => {
         title: task.title,
         description: task.description,
         status: task.status,
-        fullname: task.assigned_member_id, // Use assigned_member_id directly
+        fullname: task.assigned_member_id,
         completion_date: task.completion_date
           ? moment(task.completion_date)
           : null,
@@ -31,20 +31,19 @@ const EditTaskModal = ({ open, onCancel, onSave, task, users }) => {
       }
 
       const taskData = {
-        id: task.id, // Include the task ID for editing
-        created_at: task.created_at, // Assuming these fields are not editable
-        title: values.title.trim(), // Trim the title input
-        description: values.description.trim(), // Trim the description input
+        id: task.id,
+        created_at: task.created_at,
+        title: values.title.trim(),
+        description: values.description.trim(),
         completion_date: values.completion_date
           ? values.completion_date.format("YYYY-MM-DD")
           : null,
         status: values.status,
-        assigned_member_id: selectedUser.id, // Use selected user's ID as assigned_member_id
+        assigned_member_id: selectedUser.id,
       };
 
-      onSave(task.key, taskData); // Call onSave with updated taskData
+      onSave(task.key, taskData);
 
-      // Reset form fields after saving
       form.resetFields();
     });
   };

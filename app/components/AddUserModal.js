@@ -1,4 +1,3 @@
-import React from "react";
 import { Modal, Form, Input, Button, Select, message } from "antd";
 import moment from "moment";
 
@@ -19,16 +18,14 @@ const AddUserModal = ({ visible, onCancel, onSave }) => {
       });
   };
 
-  // Custom validator for firstname and lastname
   const validateName = (_, value) => {
-    const georgianAndEnglishRegex = /^[\u10D0-\u10F6\u10F7a-zA-Z\s]*$/; // Georgian letters, English letters, and spaces
+    const georgianAndEnglishRegex = /^[\u10D0-\u10F6\u10F7a-zA-Z\s]*$/;
     if (!georgianAndEnglishRegex.test(value.trim())) {
       return Promise.reject("Please input only Georgian and English letters!");
     }
     return Promise.resolve();
   };
 
-  // Custom validator for gender
   const validateGender = (_, value) => {
     if (!value) {
       return Promise.reject("Please select your gender!");
@@ -36,7 +33,6 @@ const AddUserModal = ({ visible, onCancel, onSave }) => {
     return Promise.resolve();
   };
 
-  // Custom validator for birthday
   const validateBirthday = (_, value) => {
     const dateFormat = "YYYY-MM-DD";
     if (!moment(value, dateFormat, true).isValid()) {
@@ -47,10 +43,8 @@ const AddUserModal = ({ visible, onCancel, onSave }) => {
     const today = moment();
     const yearsDiff = today.diff(birthDate, "years");
 
-    // Calculate the date exactly 18 years ago from today
     const minDate = today.clone().subtract(18, "years");
 
-    // Compare with the birth date
     if (birthDate.isAfter(minDate)) {
       return Promise.reject("You must be at least 18 years old!");
     }

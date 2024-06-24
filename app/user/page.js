@@ -1,7 +1,7 @@
-// src/pages/UserPage.js
 "use client";
-import React, { useState } from "react";
-import { Table, Button, Popconfirm, message } from "antd";
+import { useState } from "react";
+import { Table, Button, Popconfirm } from "antd";
+
 import { useUsers } from "../hooks/useUsers";
 import Spinner from "../components/Spinner";
 import Heading from "../components/Heading";
