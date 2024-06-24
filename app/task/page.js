@@ -187,19 +187,28 @@ const TaskPage = () => {
   const dataSource = tasks.map((task) => ({
     key: task.id,
     fullname: `${task._assigned_member?.firstname || ""} ${
-      task._assigned_member?.lastname || ""
+      task._assigned_member?.lastname || "Pending"
     }`,
     title: task.title,
     description: task.description,
     completion_date: task.completion_date,
     status: task.status,
-    style: {
-      backgroundColor:
-        task.completion_date && new Date(task.completion_date) < new Date()
-          ? "#FECACA"
-          : "inherit",
-    },
   }));
+
+  const rowClassName = (record) => {
+    const isExpired =
+      record.completion_date && new Date(record.completion_date) < new Date();
+    if (isExpired && record.status === "ongoing") {
+      return "expired-ongoing-task-row";
+    }
+    if (isExpired && record.status === "completed") {
+      return "expired-completed-task-row";
+    }
+    if (record.status === "completed") {
+      return "completed-task-row";
+    }
+    return "";
+  };
 
   return (
     <>
@@ -235,7 +244,11 @@ const TaskPage = () => {
             >
               Add Task
             </Button>
-            <Table dataSource={dataSource} columns={columns} />
+            <Table
+              dataSource={dataSource}
+              columns={columns}
+              rowClassName={rowClassName}
+            />
           </div>
         ) : (
           <p className=" text-center">No tasks found</p>

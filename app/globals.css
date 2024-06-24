@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.completed-task-row {
+  background-color: #d4edda !important; /* Green for completed tasks */
+}
+
+.expired-ongoing-task-row {
+  background-color: #f8d7da !important; /* Red for expired ongoing tasks */
+}
+
+.expired-completed-task-row {
+  background-color: #c3e6cb !important; /* Light green for expired completed tasks */
+}
